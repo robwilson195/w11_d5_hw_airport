@@ -43,7 +43,19 @@ public class AirportTest {
     }
 
     @Test
-    public void canGetFlight() {
+    public void startsWithNoFlights() {
         assertEquals(0, airport.getFlights().size());
+    }
+
+    @Test
+    public void canMakeFlight() {
+        airport.scheduleFlight("FF278", "Geneva");
+        assertEquals("FF278", airport.getFlights().get(0).getFlightNumber());
+    }
+
+    @Test
+    public void canAddPlane() {
+        airport.addPlane(plane2);
+        assertEquals(plane2, airport.getHangers().get(1).get(0));
     }
 }

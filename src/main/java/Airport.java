@@ -8,8 +8,8 @@ public class Airport {
 
     public Airport(String airPortCode) {
         this.airportCode = airPortCode;
-        this.hangers = new ArrayList<>();
         this.flights = new ArrayList<>();
+        this.hangers = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             this.hangers.add(new ArrayList<>());
         }
@@ -25,5 +25,20 @@ public class Airport {
 
     public ArrayList<Flight> getFlights() {
         return flights;
+    }
+
+    public void scheduleFlight(String code, String dest) {
+        Flight newFlight = new Flight(code, dest);
+        this.flights.add(newFlight);
+    }
+
+    public void addPlane(Plane newPlane) {
+        if (newPlane.getPlaneType() == PlaneType.COMACC919) {
+            this.hangers.get(0).add(newPlane);
+        } else if (newPlane.getPlaneType() == PlaneType.BOEING747) {
+            this.hangers.get(1).add(newPlane);
+        } else if (newPlane.getPlaneType() == PlaneType.AIRBUSA380){
+            this.hangers.get(2).add(newPlane);
+        }
     }
 }

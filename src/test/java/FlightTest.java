@@ -78,4 +78,10 @@ public class FlightTest {
         flight.addPlane(plane2);
         assertEquals(plane2, flight.getPlane());
     }
+
+    @Test
+    public void canSwitchHistoricalStatus() {
+        flight.depart();
+        assertEquals(true, flight.getHistoricalStatus());
+    }
 }

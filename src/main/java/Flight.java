@@ -58,4 +58,8 @@ public class Flight {
         this.plane = null;
         return returnedPlane;
     }
+
+    public void depart() {
+        this.historicalStatus = true;
+    }
 }
