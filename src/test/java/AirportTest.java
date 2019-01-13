@@ -15,6 +15,7 @@ public class AirportTest {
     private Passenger passenger1;
     private Passenger passenger2;
     private Passenger passenger3;
+    private Passenger passenger4;
 
     @Before
     public void setUp(){
@@ -27,6 +28,7 @@ public class AirportTest {
         this.passenger1 = new Passenger("Catherine Megregian", "CFG12345");
         this.passenger2 = new Passenger("Rob Wilson", "CFG34567");
         this.passenger3 = new Passenger("Stuart Brown", "CFG56789");
+        this.passenger4 = new Passenger("Aimee Keown", "CFG76543");
 
     }
 
@@ -54,8 +56,78 @@ public class AirportTest {
     }
 
     @Test
+    public void canReturnFlightByCode() {
+        airport.scheduleFlight("FF278", "Geneva");
+        airport.scheduleFlight("FG987", "Miami");
+        Flight foundFlight = airport.findFlight("FG987");
+        assertEquals("Miami", foundFlight.getDestination());
+    }
+
+    @Test
     public void canAddPlane() {
         airport.addPlane(plane2);
         assertEquals(plane2, airport.getHangers().get(1).get(0));
+    }
+
+    @Test
+    public void  canReturnSmallestAvailablePlane() {
+        airport.addPlane(plane2);
+        airport.addPlane(plane3);
+        airport.addPlane(plane4);
+        airport.addPlane(plane1);
+        airport.addPlane(plane5);
+        assertEquals(plane1, airport.getSmallestPlane());
+    }
+
+    @Test
+    public void smallestPlaneIsCheckedOutWhenFlightIsScheduled() {
+        airport.addPlane(plane2);
+        airport.addPlane(plane3);
+        airport.addPlane(plane4);
+        airport.addPlane(plane1);
+        airport.addPlane(plane5);
+        airport.scheduleFlight("FG987", "Miami");
+        assertEquals(plane2, airport.getSmallestPlane());
+    }
+
+    @Test
+    public void canSellTicket() {
+        airport.addPlane(plane1);
+        airport.scheduleFlight("FG987", "Miami");
+        airport.sellTicket("FG987", passenger1);
+        assertEquals(1,airport.findFlight("FG987").getPassengers().size());
+    }
+
+    @Test
+    public void canUpdradePlaneIfCapacityExceeded() {
+        airport.addPlane(plane1);
+        airport.addPlane(plane2);
+        airport.scheduleFlight("FG987", "Miami");
+        assertEquals(plane1, airport.findFlight("FG987").getPlane());
+        airport.sellTicket("FG987", passenger1);
+        airport.sellTicket("FG987", passenger2);
+        airport.sellTicket("FG987", passenger3);
+        assertEquals(plane2, airport.findFlight("FG987").getPlane());
+    }
+
+    @Test
+    public void wontSellTicketIfBigEnoughPlaneNotAvailable() {
+        airport.addPlane(plane1);
+        airport.addPlane(plane2);
+        airport.scheduleFlight("FG987", "Miami");
+        assertEquals(plane1, airport.findFlight("FG987").getPlane());
+        airport.sellTicket("FG987", passenger1);
+        airport.sellTicket("FG987", passenger2);
+        airport.sellTicket("FG987", passenger3);
+        assertEquals(plane2, airport.findFlight("FG987").getPlane());
+        airport.sellTicket("FG987", passenger4);
+        assertEquals(3, airport.findFlight("FG987").getPassengers().size());
+    }
+
+    @Test
+    public void canLaunchFlight() {
+        airport.scheduleFlight("FG987", "Miami");
+        airport.launchFlight("FG987");
+        assertEquals(true, airport.findFlight("FG987").getHistoricalStatus());
     }
 }
